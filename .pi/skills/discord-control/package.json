@@ -1,0 +1,10 @@
+{
+  "name": "discord-control-skill",
+  "version": "1.0.0",
+  "description": "Discord integration for pi agent",
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "@mariozechner/pi-coding-agent": "file:../../../node_modules/@mariozechner/pi-coding-agent",
+    "dotenv": "^16.4.1"
+  }
+}
