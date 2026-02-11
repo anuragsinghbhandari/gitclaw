@@ -174,7 +174,7 @@ def export_html(output_path):
     <div id="excalidraw-container"></div>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@excalidraw/excalidraw/dist/excalidraw.production.min.js"></script>
+    <script src="https://unpkg.com/@excalidraw/excalidraw/dist/excalidraw.production.min.js" type="text/javascript"></script>
     <script>
         const diagramData = {json_data};
         const App = () => {{
