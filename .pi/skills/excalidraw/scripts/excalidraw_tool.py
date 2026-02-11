@@ -117,17 +117,39 @@ def add_arrow(from_id, to_id, label=""):
     x1, y1 = from_elem["x"] + from_elem["width"] / 2, from_elem["y"] + from_elem["height"] / 2
     x2, y2 = to_elem["x"] + to_elem["width"] / 2, to_elem["y"] + to_elem["height"] / 2
     
-    arrow = create_element("arrow", x=x1, y=y1, points=[[0, 0], [x2-x1, y2-y1]], 
+    # Calculate vector
+    dx = x2 - x1
+    dy = y2 - y1
+    dist = (dx**2 + dy**2)**0.5
+    
+    if dist == 0:
+        return
+
+    # Offset from start and end nodes to avoid crossing the text
+    # We'll start the arrow from the edge of the source node and end at the edge of target node
+    # Adding a bit of padding (5px)
+    start_offset_x = (dx / dist) * (from_elem["width"] / 2 + 5)
+    start_offset_y = (dy / dist) * (from_elem["height"] / 2 + 5)
+    end_offset_x = (dx / dist) * (to_elem["width"] / 2 + 5)
+    end_offset_y = (dy / dist) * (to_elem["height"] / 2 + 5)
+
+    actual_start_x = x1 + start_offset_x
+    actual_start_y = y1 + start_offset_y
+    actual_end_x = x2 - end_offset_x
+    actual_end_y = y2 - end_offset_y
+
+    arrow = create_element("arrow", x=actual_start_x, y=actual_start_y, 
+                           points=[[0, 0], [actual_end_x - actual_start_x, actual_end_y - actual_start_y]], 
                            startBinding={"elementId": from_id, "focus": 0, "gap": 1},
                            endBinding={"elementId": to_id, "focus": 0, "gap": 1})
     
     data["elements"].append(arrow)
     
     if label:
-        # Add label text to the arrow
-        mid_x = (x1 + x2) / 2
-        mid_y = (y1 + y2) / 2
-        text_label = create_element("text", x=mid_x - 50, y=mid_y - 10, width=100, height=20, text=label)
+        # Add label text to the arrow, positioned slightly above the midpoint
+        mid_x = (actual_start_x + actual_end_x) / 2
+        mid_y = (actual_start_y + actual_end_y) / 2
+        text_label = create_element("text", x=mid_x - 50, y=mid_y - 25, width=100, height=20, text=label)
         data["elements"].append(text_label)
 
     save_diagram(data)
