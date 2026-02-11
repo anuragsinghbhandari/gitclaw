@@ -34,17 +34,16 @@
     <div class="header">Crunch's Excalidraw Viewer 🦃</div>
     <div id="excalidraw-container"></div>
 
-    <!-- We use the Excalidraw package from a CDN -->
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@excalidraw/excalidraw/dist/excalidraw.development.js"></script>
+    <!-- Production versions for better compatibility -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@excalidraw/excalidraw/dist/excalidraw.production.min.js"></script>
 
     <script>
         const App = () => {
             const [elements, setElements] = React.useState([]);
 
             React.useEffect(() => {
-                // Fetch the diagram data from the same directory
                 fetch('diagram.excalidraw')
                     .then(response => response.json())
                     .then(data => {
@@ -54,24 +53,25 @@
                     })
                     .catch(err => {
                         console.error("Error loading diagram:", err);
-                        // Fallback message or empty state
                     });
             }, []);
 
+            // Wait until ExcalidrawLib is loaded by the CDN script
+            if (typeof ExcalidrawLib === 'undefined') {
+                return React.createElement("div", null, "Loading Excalidraw library...");
+            }
+
             return React.createElement(
-                React.Fragment,
-                null,
-                React.createElement(
-                    "div",
-                    { style: { height: "100%" } },
-                    React.createElement(ExcalidrawLib.Excalidraw, {
-                        initialData: {
-                            elements: elements,
-                            scrollToContent: true
-                        },
-                        viewModeEnabled: true // Set to false if you want it to be editable
-                    })
-                )
+                "div",
+                { style: { height: "100%" } },
+                React.createElement(ExcalidrawLib.Excalidraw, {
+                    initialData: {
+                        elements: elements,
+                        appState: { viewBackgroundColor: "#ffffff" },
+                        scrollToContent: true
+                    },
+                    viewModeEnabled: true
+                })
             );
         };
 
