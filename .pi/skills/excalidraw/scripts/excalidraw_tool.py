@@ -160,6 +160,47 @@ def clear_diagram():
         os.remove(DIAGRAM_FILE)
     print("Diagram cleared.")
 
+def generate_svg(data):
+    elements = data.get("elements", [])
+    if not elements:
+        return ""
+    
+    # Simple bounding box calculation
+    min_x = min(e["x"] for e in elements)
+    min_y = min(e["y"] for e in elements)
+    max_x = max(e["x"] + e["width"] for e in elements)
+    max_y = max(e["y"] + e["height"] for e in elements)
+    
+    width = max_x - min_x + 100
+    height = max_y - min_y + 100
+    
+    svg_parts = [
+        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="{min_x-50} {min_y-50} {width} {height}" width="{width}" height="{height}">',
+        '<defs><marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#1e1e1e" /></marker></defs>'
+    ]
+    
+    for e in elements:
+        if e.get("isDeleted"): continue
+        
+        if e["type"] == "rectangle":
+            svg_parts.append(f'<rect x="{e["x"]}" y="{e["y"]}" width="{e["width"]}" height="{e["height"]}" rx="10" fill="none" stroke="{e["strokeColor"]}" stroke-width="{e["strokeWidth"]}" />')
+        elif e["type"] == "text":
+            # Very basic text centering
+            tx = e["x"] + e["width"] / 2
+            ty = e["y"] + e["height"] / 2 + 5
+            svg_parts.append(f'<text x="{tx}" y="{ty}" font-family="sans-serif" font-size="{e["fontSize"]}" text-anchor="middle" fill="{e["strokeColor"]}">{e["text"]}</text>')
+        elif e["type"] == "arrow":
+            x, y = e["x"], e["y"]
+            pts = e["points"]
+            if len(pts) >= 2:
+                path_data = f'M {x+pts[0][0]} {y+pts[0][1]}'
+                for p in pts[1:]:
+                    path_data += f' L {x+p[0]} {y+p[1]}'
+                svg_parts.append(f'<path d="{path_data}" fill="none" stroke="{e["strokeColor"]}" stroke-width="{e["strokeWidth"]}" marker-end="url(#arrowhead)" />')
+                
+    svg_parts.append('</svg>')
+    return "\n".join(svg_parts)
+
 def list_elements():
     data = load_diagram()
     for e in data["elements"]:
@@ -194,25 +235,47 @@ def export_html(output_path):
 <body>
     <div class="header">Crunch's Excalidraw Viewer 🦃</div>
     <div id="excalidraw-container"></div>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@excalidraw/excalidraw/dist/excalidraw.production.min.js" type="text/javascript"></script>
+    <!-- Using jsdelivr for better reliability and explicit types -->
+    <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@excalidraw/excalidraw/dist/excalidraw.production.min.js"></script>
     <script>
         const diagramData = {json_data};
         const App = () => {{
-            if (typeof ExcalidrawLib === 'undefined') return React.createElement("div", null, "Loading Excalidraw...");
-            return React.createElement("div", {{ style: {{ height: "100%" }} }}, 
-                React.createElement(ExcalidrawLib.Excalidraw, {{
-                    initialData: {{
-                        elements: diagramData.elements,
-                        appState: {{ viewBackgroundColor: "#ffffff" }},
-                        scrollToContent: true
-                    }},
-                    viewModeEnabled: true
-                }})
-            );
+            const [isLoaded, setIsLoaded] = React.useState(false);
+            
+            React.useEffect(() => {{
+                const checkLib = () => {{
+                    if (typeof ExcalidrawLib !== 'undefined') {{
+                        setIsLoaded(true);
+                    }} else {{
+                        setTimeout(checkLib, 100);
+                    }}
+                }};
+                checkLib();
+            }}, []);
+
+            if (!isLoaded) return React.createElement("div", {{ style: {{ padding: "20px" }} }}, "Loading Excalidraw library...");
+
+            try {{
+                return React.createElement("div", {{ style: {{ height: "100%" }} }}, 
+                    React.createElement(ExcalidrawLib.Excalidraw, {{
+                        initialData: {{
+                            elements: diagramData.elements,
+                            appState: {{ viewBackgroundColor: "#ffffff" }},
+                            scrollToContent: true
+                        }},
+                        viewModeEnabled: true
+                    }})
+                );
+            }} catch (e) {{
+                return React.createElement("div", {{ style: {{ padding: "20px", color: "red" }} }}, "Error rendering diagram: " + e.message);
+            }}
         }};
-        ReactDOM.createRoot(document.getElementById("excalidraw-container")).render(React.createElement(App));
+        
+        const container = document.getElementById("excalidraw-container");
+        const root = ReactDOM.createRoot(container);
+        root.render(React.createElement(App));
     </script>
 </body>
 </html>"""
@@ -245,6 +308,10 @@ if __name__ == "__main__":
     elif cmd == "export_html":
         output = sys.argv[2] if len(sys.argv) > 2 else "viewer.html"
         export_html(output)
+    elif cmd == "render_svg":
+        data = load_diagram()
+        svg = generate_svg(data)
+        print(svg)
     elif cmd == "delete":
         element_id = sys.argv[2]
         data = load_diagram()

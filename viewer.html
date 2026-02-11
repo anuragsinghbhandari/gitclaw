@@ -12,25 +12,47 @@
 <body>
     <div class="header">Crunch's Excalidraw Viewer 🦃</div>
     <div id="excalidraw-container"></div>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@excalidraw/excalidraw@0.17.6/dist/excalidraw.production.min.js" type="text/javascript type="text/javascript"></script>
+    <!-- Using jsdelivr for better reliability and explicit types -->
+    <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@excalidraw/excalidraw/dist/excalidraw.production.min.js"></script>
     <script>
         const diagramData = {"type": "excalidraw", "version": 2, "source": "https://github.com/gitclaw/gitclaw", "elements": [{"id": "cd3e3eb3-a133-4911-9825-43b778de1dfb", "type": "rectangle", "x": 100, "y": 100, "width": 150, "height": 80, "strokeColor": "#1e1e1e", "backgroundColor": "transparent", "fillStyle": "solid", "strokeWidth": 2, "strokeStyle": "solid", "roughness": 1, "opacity": 100, "groupIds": [], "frameId": null, "roundness": {"type": 3}, "seed": 945500, "version": 1, "versionNonce": 73876, "isDeleted": false, "boundElements": [{"id": "dfee2c07-d430-4ffd-bf18-5243c16512b9", "type": "text"}], "updated": 1, "link": null, "locked": false}, {"id": "dfee2c07-d430-4ffd-bf18-5243c16512b9", "type": "text", "x": 100, "y": 100, "width": 150, "height": 80, "strokeColor": "#1e1e1e", "backgroundColor": "transparent", "fillStyle": "solid", "strokeWidth": 2, "strokeStyle": "solid", "roughness": 1, "opacity": 100, "groupIds": [], "frameId": null, "roundness": null, "seed": 384566, "version": 1, "versionNonce": 823616, "isDeleted": false, "boundElements": null, "updated": 1, "link": null, "locked": false, "text": "User", "fontSize": 20, "fontFamily": 1, "textAlign": "center", "verticalAlign": "middle", "baseline": 18, "containerId": "cd3e3eb3-a133-4911-9825-43b778de1dfb", "originalText": "User"}, {"id": "f28459c1-c9a8-414b-b4be-212d72f7b583", "type": "rectangle", "x": 400, "y": 100, "width": 150, "height": 80, "strokeColor": "#1e1e1e", "backgroundColor": "transparent", "fillStyle": "solid", "strokeWidth": 2, "strokeStyle": "solid", "roughness": 1, "opacity": 100, "groupIds": [], "frameId": null, "roundness": {"type": 3}, "seed": 723607, "version": 1, "versionNonce": 572550, "isDeleted": false, "boundElements": [{"id": "e215079f-634c-4f56-8e51-532949cdfae9", "type": "text"}], "updated": 1, "link": null, "locked": false}, {"id": "e215079f-634c-4f56-8e51-532949cdfae9", "type": "text", "x": 400, "y": 100, "width": 150, "height": 80, "strokeColor": "#1e1e1e", "backgroundColor": "transparent", "fillStyle": "solid", "strokeWidth": 2, "strokeStyle": "solid", "roughness": 1, "opacity": 100, "groupIds": [], "frameId": null, "roundness": null, "seed": 401801, "version": 1, "versionNonce": 413311, "isDeleted": false, "boundElements": null, "updated": 1, "link": null, "locked": false, "text": "API Server", "fontSize": 20, "fontFamily": 1, "textAlign": "center", "verticalAlign": "middle", "baseline": 18, "containerId": "f28459c1-c9a8-414b-b4be-212d72f7b583", "originalText": "API Server"}, {"id": "323095e6-327a-4941-8140-d29b0a6f0b84", "type": "rectangle", "x": 700, "y": 100, "width": 150, "height": 80, "strokeColor": "#1e1e1e", "backgroundColor": "transparent", "fillStyle": "solid", "strokeWidth": 2, "strokeStyle": "solid", "roughness": 1, "opacity": 100, "groupIds": [], "frameId": null, "roundness": {"type": 3}, "seed": 467555, "version": 1, "versionNonce": 459063, "isDeleted": false, "boundElements": [{"id": "daa2e960-eede-41a4-af32-3814c23154a0", "type": "text"}], "updated": 1, "link": null, "locked": false}, {"id": "daa2e960-eede-41a4-af32-3814c23154a0", "type": "text", "x": 700, "y": 100, "width": 150, "height": 80, "strokeColor": "#1e1e1e", "backgroundColor": "transparent", "fillStyle": "solid", "strokeWidth": 2, "strokeStyle": "solid", "roughness": 1, "opacity": 100, "groupIds": [], "frameId": null, "roundness": null, "seed": 125393, "version": 1, "versionNonce": 439329, "isDeleted": false, "boundElements": null, "updated": 1, "link": null, "locked": false, "text": "Database", "fontSize": 20, "fontFamily": 1, "textAlign": "center", "verticalAlign": "middle", "baseline": 18, "containerId": "323095e6-327a-4941-8140-d29b0a6f0b84", "originalText": "Database"}, {"id": "5396c260-9fee-4adc-968e-99e101de0013", "type": "arrow", "x": 255.0, "y": 140.0, "width": 140.0, "height": 0, "strokeColor": "#1e1e1e", "backgroundColor": "transparent", "fillStyle": "solid", "strokeWidth": 2, "strokeStyle": "solid", "roughness": 1, "opacity": 100, "groupIds": [], "frameId": null, "roundness": null, "seed": 239151, "version": 1, "versionNonce": 94080, "isDeleted": false, "boundElements": null, "updated": 1, "link": null, "locked": false, "points": [[0, 0], [140.0, 0.0]], "lastCommittedPoint": null, "startBinding": {"elementId": "cd3e3eb3-a133-4911-9825-43b778de1dfb", "focus": 0, "gap": 1}, "endBinding": {"elementId": "f28459c1-c9a8-414b-b4be-212d72f7b583", "focus": 0, "gap": 1}, "startArrowhead": null, "endArrowhead": "arrow"}, {"id": "2a8d5d80-bca8-4927-ae45-e81586359a9e", "type": "text", "x": 275.0, "y": 115.0, "width": 100, "height": 20, "strokeColor": "#1e1e1e", "backgroundColor": "transparent", "fillStyle": "solid", "strokeWidth": 2, "strokeStyle": "solid", "roughness": 1, "opacity": 100, "groupIds": [], "frameId": null, "roundness": null, "seed": 602648, "version": 1, "versionNonce": 689368, "isDeleted": false, "boundElements": null, "updated": 1, "link": null, "locked": false, "text": "HTTP GET", "fontSize": 20, "fontFamily": 1, "textAlign": "center", "verticalAlign": "middle", "baseline": 18, "containerId": null, "originalText": "HTTP GET"}, {"id": "c4f5aa36-951b-4d4d-a7ab-81c230fb3428", "type": "arrow", "x": 555.0, "y": 140.0, "width": 140.0, "height": 0, "strokeColor": "#1e1e1e", "backgroundColor": "transparent", "fillStyle": "solid", "strokeWidth": 2, "strokeStyle": "solid", "roughness": 1, "opacity": 100, "groupIds": [], "frameId": null, "roundness": null, "seed": 516917, "version": 1, "versionNonce": 636022, "isDeleted": false, "boundElements": null, "updated": 1, "link": null, "locked": false, "points": [[0, 0], [140.0, 0.0]], "lastCommittedPoint": null, "startBinding": {"elementId": "f28459c1-c9a8-414b-b4be-212d72f7b583", "focus": 0, "gap": 1}, "endBinding": {"elementId": "323095e6-327a-4941-8140-d29b0a6f0b84", "focus": 0, "gap": 1}, "startArrowhead": null, "endArrowhead": "arrow"}, {"id": "216db3e8-0420-42ba-8446-6c59ad6cf36e", "type": "text", "x": 575.0, "y": 115.0, "width": 100, "height": 20, "strokeColor": "#1e1e1e", "backgroundColor": "transparent", "fillStyle": "solid", "strokeWidth": 2, "strokeStyle": "solid", "roughness": 1, "opacity": 100, "groupIds": [], "frameId": null, "roundness": null, "seed": 2348, "version": 1, "versionNonce": 728246, "isDeleted": false, "boundElements": null, "updated": 1, "link": null, "locked": false, "text": "SQL Query", "fontSize": 20, "fontFamily": 1, "textAlign": "center", "verticalAlign": "middle", "baseline": 18, "containerId": null, "originalText": "SQL Query"}], "appState": {"viewBackgroundColor": "#ffffff", "gridSize": 20}, "files": {}};
         const App = () => {
-            if (typeof ExcalidrawLib === 'undefined') return React.createElement("div", null, "Loading Excalidraw...");
-            return React.createElement("div", { style: { height: "100%" } }, 
-                React.createElement(ExcalidrawLib.Excalidraw, {
-                    initialData: {
-                        elements: diagramData.elements,
-                        appState: { viewBackgroundColor: "#ffffff" },
-                        scrollToContent: true
-                    },
-                    viewModeEnabled: true
-                })
-            );
+            const [isLoaded, setIsLoaded] = React.useState(false);
+            
+            React.useEffect(() => {
+                const checkLib = () => {
+                    if (typeof ExcalidrawLib !== 'undefined') {
+                        setIsLoaded(true);
+                    } else {
+                        setTimeout(checkLib, 100);
+                    }
+                };
+                checkLib();
+            }, []);
+
+            if (!isLoaded) return React.createElement("div", { style: { padding: "20px" } }, "Loading Excalidraw library...");
+
+            try {
+                return React.createElement("div", { style: { height: "100%" } }, 
+                    React.createElement(ExcalidrawLib.Excalidraw, {
+                        initialData: {
+                            elements: diagramData.elements,
+                            appState: { viewBackgroundColor: "#ffffff" },
+                            scrollToContent: true
+                        },
+                        viewModeEnabled: true
+                    })
+                );
+            } catch (e) {
+                return React.createElement("div", { style: { padding: "20px", color: "red" } }, "Error rendering diagram: " + e.message);
+            }
         };
-        ReactDOM.createRoot(document.getElementById("excalidraw-container")).render(React.createElement(App));
+        
+        const container = document.getElementById("excalidraw-container");
+        const root = ReactDOM.createRoot(container);
+        root.render(React.createElement(App));
     </script>
 </body>
 </html>
