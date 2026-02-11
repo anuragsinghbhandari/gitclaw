@@ -44,11 +44,11 @@ View current elements and their IDs.
 ```
 
 ### 7. View Diagram
-I've provided a `viewer.html` in the assets. To view your diagram:
-1. Copy `.pi/skills/excalidraw/assets/viewer.html` to the same directory as your `diagram.excalidraw`.
-2. Open `viewer.html` in your browser.
-
-Alternatively, just drag `diagram.excalidraw` into [excalidraw.com](https://excalidraw.com).
+I've provided an `export_html` command. It creates a standalone HTML file with the diagram data embedded, which bypasses CORS issues when opening locally.
+```bash
+./.pi/skills/excalidraw/scripts/excalidraw_tool.py export_html viewer.html
+```
+Open `viewer.html` in your browser to see the masterpiece.
 
 ## Workflow: Building an Architecture
 

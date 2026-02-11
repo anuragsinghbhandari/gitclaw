@@ -154,9 +154,53 @@ def list_elements():
             
         print(f"{e['id']}: {e['type']}{label} at ({e['x']}, {e['y']})")
 
+def export_html(output_path):
+    data = load_diagram()
+    json_data = json.dumps(data)
+    
+    html_template = f"""<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Excalidraw Viewer</title>
+    <style>
+        body, html {{ margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background-color: #f8f9fa; }}
+        #excalidraw-container {{ height: 100vh; width: 100vw; }}
+        .header {{ position: absolute; top: 10px; left: 10px; z-index: 10; background: rgba(255, 255, 255, 0.8); padding: 5px 10px; border-radius: 4px; font-family: sans-serif; font-size: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }}
+    </style>
+</head>
+<body>
+    <div class="header">Crunch's Excalidraw Viewer 🦃</div>
+    <div id="excalidraw-container"></div>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@excalidraw/excalidraw/dist/excalidraw.production.min.js"></script>
+    <script>
+        const diagramData = {json_data};
+        const App = () => {{
+            if (typeof ExcalidrawLib === 'undefined') return React.createElement("div", null, "Loading Excalidraw...");
+            return React.createElement("div", {{ style: {{ height: "100%" }} }}, 
+                React.createElement(ExcalidrawLib.Excalidraw, {{
+                    initialData: {{
+                        elements: diagramData.elements,
+                        appState: {{ viewBackgroundColor: "#ffffff" }},
+                        scrollToContent: true
+                    }},
+                    viewModeEnabled: true
+                }})
+            );
+        }};
+        ReactDOM.createRoot(document.getElementById("excalidraw-container")).render(React.createElement(App));
+    </script>
+</body>
+</html>"""
+    with open(output_path, "w") as f:
+        f.write(html_template)
+    print(f"Exported to {output_path}")
+
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: excalidraw_tool.py [add_node|add_arrow|clear|list] ...")
+        print("Usage: excalidraw_tool.py [add_node|add_arrow|clear|list|export_html] ...")
         sys.exit(1)
     
     cmd = sys.argv[1]
@@ -176,6 +220,9 @@ if __name__ == "__main__":
         clear_diagram()
     elif cmd == "list":
         list_elements()
+    elif cmd == "export_html":
+        output = sys.argv[2] if len(sys.argv) > 2 else "viewer.html"
+        export_html(output)
     elif cmd == "delete":
         element_id = sys.argv[2]
         data = load_diagram()
