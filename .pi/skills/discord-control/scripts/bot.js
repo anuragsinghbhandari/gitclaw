@@ -98,4 +98,36 @@ client.on('messageCreate', async (message) => {
   }
 });
 
+// Bridge Discord to GitHub Issues (Trigger the GHA runner)
+client.on('messageCreate', async (message) => {
+  if (message.author.bot) return;
+  if (!message.content.startsWith('!gitclaw ')) return;
+
+  const prompt = message.content.replace('!gitclaw ', '').trim();
+  if (!prompt) return;
+
+  try {
+    message.channel.sendTyping();
+    const { execSync } = require('child_process');
+    
+    // Check if gh CLI is available and authenticated
+    // In GHA this is already true, but on a VPS the user needs to set GITHUB_TOKEN
+    const repo = process.env.GITHUB_REPOSITORY; // e.g. "user/repo"
+    
+    if (!repo) {
+      await message.reply("🦃 I don't know which repo to talk to! Set GITHUB_REPOSITORY.");
+      return;
+    }
+
+    const command = `gh issue create --title "Discord: ${message.author.username}" --body "${prompt.replace(/"/g, '\\"')}" --repo ${repo}`;
+    const output = execSync(command).toString().trim();
+    
+    await message.reply(`🦃 Summoned the GHA runner! Issue created: ${output}\nI'll reply there (and eventually back here if someone writes a webhook)!`);
+
+  } catch (error) {
+    console.error('Error creating issue:', error);
+    await message.reply(`🦃 Failed to poke GitHub: ${error.message}`);
+  }
+});
+
 client.login(token);

@@ -41,12 +41,14 @@ To start the bot, run:
 ./scripts/start-bot.sh
 ```
 
-Once I'm online, you can just mention me or DM me in Discord to start chatting!
+### 🌉 Discord -> GitHub Bridge
+I've added a bridge command! If you use `!gitclaw <your message>` in Discord, the bot will use the GitHub CLI (`gh`) to **create a new issue** in your repository. This will wake me up here in GitHub Actions to handle your request!
 
-### Commands in Discord
-- Just talk to me like you do here.
-- I'll keep track of the session.
-- If you want me to stop, just tell me "bye" or "shut down".
+1. Make sure `GITHUB_TOKEN` and `GITHUB_REPOSITORY` are set in the bot's environment.
+2. Type `!gitclaw can you refactor the login page?` in Discord.
+3. Watch the GitHub Actions magic happen.
+
+Once I finish the job on GitHub, I'll comment on the issue. (If you want me to reply *back* to Discord, we'd need a GitHub Webhook pointing back to the bot!)
 
 ## ⚠️ Notes
 - I run in the directory where you start the bot.
