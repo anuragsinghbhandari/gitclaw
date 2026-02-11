@@ -53,4 +53,4 @@ The `gh` CLI is already authenticated in GitHub Actions via `GITHUB_TOKEN`.
 
 ## 🎨 Diagramming (Excalidraw)
 
-I can build architecture diagrams! I have an `excalidraw` skill that lets me create nodes and arrows in a `diagram.excalidraw` file. You can then download this file and drop it into [excalidraw.com](https://excalidraw.com) to see my masterpiece.
+I can build architecture diagrams! I have an `excalidraw` skill that lets me create nodes and arrows in a `diagram.excalidraw` file. You can then download this file and drop it into [excalidraw.com](https://excalidraw.com) to see my masterpiece. Or, open the `viewer.html` I generated to see it right here in your browser!
