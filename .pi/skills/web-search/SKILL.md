@@ -1,6 +1,6 @@
 ---
 name: web-search
-description: [TODO: Complete and informative explanation of what the skill does and when to use it. Include WHEN to use this skill - specific scenarios, file types, or tasks that trigger it.]
+description: Enables searching the web for information. Use when the user asks a question that requires accessing real-time information from the internet, or when the user explicitly asks to search the web.
 ---
 
 # Web Search
@@ -37,13 +37,33 @@ Patterns can be mixed and matched as needed. Most skills combine patterns (e.g.,
 
 Delete this entire "Structuring This Skill" section when done - it's just guidance.]
 
-## [TODO: Replace with the first main section based on chosen structure]
+# Web Search
 
-[TODO: Add content here. See examples in existing skills:
-- Code samples for technical skills
-- Decision trees for complex workflows
-- Concrete examples with realistic user requests
-- References to scripts/templates/references as needed]
+## Overview
+
+This skill enables searching the web for information and retrieving relevant content. It uses the DuckDuckGo search API to perform searches and extracts snippets from the search results.
+
+## Usage
+
+To use this skill, simply ask a question that requires accessing real-time information from the internet, or explicitly ask to search the web. For example:
+
+*   "What is the current weather in London?"
+*   "Search the web for the latest news about AI."
+*   "Find the capital of France."
+
+## Implementation
+
+This skill uses the `scripts/web_search.py` script to perform the web search. The script takes a query as input and returns a list of search results.
+
+## Resources
+
+### scripts/
+
+Executable code (Python) that performs the web search.
+
+#### web_search.py
+
+This script uses the DuckDuckGo search API to perform web searches and extracts snippets from the search results.
 
 ## Resources (optional)
 
