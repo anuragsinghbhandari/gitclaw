@@ -5,6 +5,8 @@ on:
     types: [opened]
   issue_comment:
     types: [created]
+  schedule:
+    - cron: "0 * * * *" 
 
 permissions:
   contents: write
