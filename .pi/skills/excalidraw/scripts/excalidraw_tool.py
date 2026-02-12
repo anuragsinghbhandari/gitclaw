@@ -76,7 +76,6 @@ def create_element(element_type, **kwargs):
             "startArrowhead": None,
             "endArrowhead": "arrow"
         })
-        # For arrows, width and height are determined by points
         pts = element["points"]
         min_x = min(p[0] for p in pts)
         max_x = max(p[0] for p in pts)
@@ -90,18 +89,21 @@ def create_element(element_type, **kwargs):
 def add_node(label, x, y, width=150, height=80, shape="rectangle"):
     data = load_diagram()
     
-    # Create the shape
-    node = create_element(shape, x=x, y=y, width=width, height=height)
-    
-    # Create the text
-    text_element = create_element("text", x=x, y=y, width=width, height=height, text=label, containerId=node["id"])
-    
-    # Bind text to node
-    node["boundElements"] = [{"id": text_element["id"], "type": "text"}]
-    
-    data["elements"].extend([node, text_element])
-    save_diagram(data)
-    return node["id"]
+    if label:
+        # For nodes with labels, we use the label as the element itself if it's just text
+        # But if it's a shape with text, we bind them.
+        node = create_element(shape, x=x, y=y, width=width, height=height)
+        text_element = create_element("text", x=x, y=y, width=width, height=height, text=label, containerId=node["id"])
+        node["boundElements"] = [{"id": text_element["id"], "type": "text"}]
+        data["elements"].extend([node, text_element])
+        save_diagram(data)
+        return node["id"]
+    else:
+        # Empty shape (like a panel)
+        node = create_element(shape, x=x, y=y, width=width, height=height)
+        data["elements"].append(node)
+        save_diagram(data)
+        return node["id"]
 
 def add_arrow(from_id, to_id, label=""):
     data = load_diagram()
@@ -110,33 +112,22 @@ def add_arrow(from_id, to_id, label=""):
     to_elem = next((e for e in data["elements"] if e["id"] == to_id), None)
     
     if not from_elem or not to_elem:
-        print(f"Error: Could not find node {from_id} or {to_id}")
-        return
+        return None
     
-    # Calculate center points
     x1, y1 = from_elem["x"] + from_elem["width"] / 2, from_elem["y"] + from_elem["height"] / 2
     x2, y2 = to_elem["x"] + to_elem["width"] / 2, to_elem["y"] + to_elem["height"] / 2
     
-    # Calculate vector
     dx = x2 - x1
     dy = y2 - y1
     dist = (dx**2 + dy**2)**0.5
     
     if dist == 0:
-        return
+        return None
 
-    # Offset from start and end nodes to avoid crossing the text
-    # We'll start the arrow from the edge of the source node and end at the edge of target node
-    # Adding a bit of padding (5px)
-    start_offset_x = (dx / dist) * (from_elem["width"] / 2 + 5)
-    start_offset_y = (dy / dist) * (from_elem["height"] / 2 + 5)
-    end_offset_x = (dx / dist) * (to_elem["width"] / 2 + 5)
-    end_offset_y = (dy / dist) * (to_elem["height"] / 2 + 5)
-
-    actual_start_x = x1 + start_offset_x
-    actual_start_y = y1 + start_offset_y
-    actual_end_x = x2 - end_offset_x
-    actual_end_y = y2 - end_offset_y
+    actual_start_x = x1
+    actual_start_y = y1
+    actual_end_x = x2
+    actual_end_y = y2
 
     arrow = create_element("arrow", x=actual_start_x, y=actual_start_y, 
                            points=[[0, 0], [actual_end_x - actual_start_x, actual_end_y - actual_start_y]], 
@@ -144,9 +135,7 @@ def add_arrow(from_id, to_id, label=""):
                            endBinding={"elementId": to_id, "focus": 0, "gap": 1})
     
     data["elements"].append(arrow)
-    
     if label:
-        # Add label text to the arrow, positioned slightly above the midpoint
         mid_x = (actual_start_x + actual_end_x) / 2
         mid_y = (actual_start_y + actual_end_y) / 2
         text_label = create_element("text", x=mid_x - 50, y=mid_y - 25, width=100, height=20, text=label)
@@ -160,63 +149,6 @@ def clear_diagram():
         os.remove(DIAGRAM_FILE)
     print("Diagram cleared.")
 
-def generate_svg(data):
-    elements = data.get("elements", [])
-    if not elements:
-        return ""
-    
-    # Simple bounding box calculation
-    min_x = min(e["x"] for e in elements)
-    min_y = min(e["y"] for e in elements)
-    max_x = max(e["x"] + e["width"] for e in elements)
-    max_y = max(e["y"] + e["height"] for e in elements)
-    
-    width = max_x - min_x + 100
-    height = max_y - min_y + 100
-    
-    svg_parts = [
-        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="{min_x-50} {min_y-50} {width} {height}" width="{width}" height="{height}">',
-        '<defs><marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#1e1e1e" /></marker></defs>'
-    ]
-    
-    for e in elements:
-        if e.get("isDeleted"): continue
-        
-        if e["type"] == "rectangle":
-            svg_parts.append(f'<rect x="{e["x"]}" y="{e["y"]}" width="{e["width"]}" height="{e["height"]}" rx="10" fill="none" stroke="{e["strokeColor"]}" stroke-width="{e["strokeWidth"]}" />')
-        elif e["type"] == "text":
-            # Very basic text centering
-            tx = e["x"] + e["width"] / 2
-            ty = e["y"] + e["height"] / 2 + 5
-            svg_parts.append(f'<text x="{tx}" y="{ty}" font-family="sans-serif" font-size="{e["fontSize"]}" text-anchor="middle" fill="{e["strokeColor"]}">{e["text"]}</text>')
-        elif e["type"] == "arrow":
-            x, y = e["x"], e["y"]
-            pts = e["points"]
-            if len(pts) >= 2:
-                path_data = f'M {x+pts[0][0]} {y+pts[0][1]}'
-                for p in pts[1:]:
-                    path_data += f' L {x+p[0]} {y+p[1]}'
-                svg_parts.append(f'<path d="{path_data}" fill="none" stroke="{e["strokeColor"]}" stroke-width="{e["strokeWidth"]}" marker-end="url(#arrowhead)" />')
-                
-    svg_parts.append('</svg>')
-    return "\n".join(svg_parts)
-
-def list_elements():
-    data = load_diagram()
-    for e in data["elements"]:
-        if e["type"] == "text" and "containerId" in e and e["containerId"]:
-            continue # Skip bound text labels for brevity
-        label = ""
-        if e["type"] != "text":
-            # try to find bound text
-            bound_text = next((t for t in data["elements"] if t["type"] == "text" and t.get("containerId") == e["id"]), None)
-            if bound_text:
-                label = f" ({bound_text['text']})"
-        else:
-            label = f" ({e['text']})"
-            
-        print(f"{e['id']}: {e['type']}{label} at ({e['x']}, {e['y']})")
-
 def export_html(output_path):
     data = load_diagram()
     json_data = json.dumps(data)
@@ -229,63 +161,35 @@ def export_html(output_path):
     <style>
         body, html {{ margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background-color: #f8f9fa; }}
         #excalidraw-container {{ height: 100vh; width: 100vw; }}
-        .header {{ position: absolute; top: 10px; left: 10px; z-index: 10; background: rgba(255, 255, 255, 0.8); padding: 5px 10px; border-radius: 4px; font-family: sans-serif; font-size: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }}
     </style>
 </head>
 <body>
-    <div class="header">Crunch's Excalidraw Viewer 🦃</div>
     <div id="excalidraw-container"></div>
-    <!-- Using jsdelivr for better reliability and explicit types -->
     <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@excalidraw/excalidraw/dist/excalidraw.production.min.js"></script>
     <script>
         const diagramData = {json_data};
         const App = () => {{
-            const [isLoaded, setIsLoaded] = React.useState(false);
-            
-            React.useEffect(() => {{
-                const checkLib = () => {{
-                    if (typeof ExcalidrawLib !== 'undefined') {{
-                        setIsLoaded(true);
-                    }} else {{
-                        setTimeout(checkLib, 100);
-                    }}
-                }};
-                checkLib();
-            }}, []);
-
-            if (!isLoaded) return React.createElement("div", {{ style: {{ padding: "20px" }} }}, "Loading Excalidraw library...");
-
-            try {{
-                return React.createElement("div", {{ style: {{ height: "100%" }} }}, 
-                    React.createElement(ExcalidrawLib.Excalidraw, {{
-                        initialData: {{
-                            elements: diagramData.elements,
-                            appState: {{ viewBackgroundColor: "#ffffff" }},
-                            scrollToContent: true
-                        }},
-                        viewModeEnabled: true
-                    }})
-                );
-            }} catch (e) {{
-                return React.createElement("div", {{ style: {{ padding: "20px", color: "red" }} }}, "Error rendering diagram: " + e.message);
-            }}
+            return React.createElement(ExcalidrawLib.Excalidraw, {{
+                initialData: {{
+                    elements: diagramData.elements,
+                    appState: {{ viewBackgroundColor: "#ffffff" }},
+                    scrollToContent: true
+                }},
+                viewModeEnabled: true
+            }});
         }};
-        
-        const container = document.getElementById("excalidraw-container");
-        const root = ReactDOM.createRoot(container);
+        const root = ReactDOM.createRoot(document.getElementById("excalidraw-container"));
         root.render(React.createElement(App));
     </script>
 </body>
 </html>"""
     with open(output_path, "w") as f:
         f.write(html_template)
-    print(f"Exported to {output_path}")
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: excalidraw_tool.py [add_node|add_arrow|clear|list|export_html] ...")
         sys.exit(1)
     
     cmd = sys.argv[1]
@@ -293,7 +197,9 @@ if __name__ == "__main__":
         label = sys.argv[2]
         x = int(sys.argv[3])
         y = int(sys.argv[4])
-        node_id = add_node(label, x, y)
+        w = int(sys.argv[5]) if len(sys.argv) > 5 else 150
+        h = int(sys.argv[6]) if len(sys.argv) > 6 else 80
+        node_id = add_node(label, x, y, w, h)
         print(f"Added node: {node_id}")
     elif cmd == "add_arrow":
         from_id = sys.argv[2]
@@ -303,39 +209,6 @@ if __name__ == "__main__":
         print(f"Added arrow: {arrow_id}")
     elif cmd == "clear":
         clear_diagram()
-    elif cmd == "list":
-        list_elements()
     elif cmd == "export_html":
         output = sys.argv[2] if len(sys.argv) > 2 else "viewer.html"
         export_html(output)
-    elif cmd == "render_svg":
-        data = load_diagram()
-        svg = generate_svg(data)
-        print(svg)
-    elif cmd == "delete":
-        element_id = sys.argv[2]
-        data = load_diagram()
-        data["elements"] = [e for e in data["elements"] if e["id"] != element_id and e.get("containerId") != element_id]
-        save_diagram(data)
-        print(f"Deleted element: {element_id}")
-    elif cmd == "move":
-        element_id = sys.argv[2]
-        new_x = int(sys.argv[3])
-        new_y = int(sys.argv[4])
-        data = load_diagram()
-        for e in data["elements"]:
-            if e["id"] == element_id:
-                dx = new_x - e["x"]
-                dy = new_y - e["y"]
-                e["x"] = new_x
-                e["y"] = new_y
-                # If it's a container, move bound text too
-                for t in data["elements"]:
-                    if t.get("containerId") == element_id:
-                        t["x"] += dx
-                        t["y"] += dy
-                break
-        save_diagram(data)
-        print(f"Moved element: {element_id}")
-    else:
-        print(f"Unknown command: {cmd}")

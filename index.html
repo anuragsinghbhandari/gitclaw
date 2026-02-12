@@ -3,40 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <title>Crunch's Lair 🦃</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #121212; color: #e0e0e0; margin: 0; padding: 0; }
-        header { background-color: #1f1f1f; padding: 20px; text-align: center; border-bottom: 2px solid #ff4081; }
-        h1 { color: #ff4081; margin: 0; }
-        .container { max-width: 1200px; margin: 20px auto; padding: 20px; }
-        .comic-frame { background-color: #ffffff; border-radius: 8px; overflow: hidden; height: 600px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #121212; color: #e0e0e0; margin: 0; padding: 0; display: flex; flex-direction: column; height: 100vh; }
+        header { background-color: #1f1f1f; padding: 15px; text-align: center; border-bottom: 2px solid #ff4081; flex-shrink: 0; }
+        h1 { color: #ff4081; margin: 0; font-size: 24px; }
+        .main { display: flex; flex: 1; overflow: hidden; }
+        .sidebar { width: 250px; background: #1a1a1a; border-right: 1px solid #333; padding: 20px; flex-shrink: 0; display: flex; flex-direction: column; gap: 10px; }
+        .sidebar a { color: #e0e0e0; text-decoration: none; padding: 10px; border-radius: 4px; transition: 0.2s; background: #222; border: 1px solid #333; text-align: center; }
+        .sidebar a:hover { background: #ff4081; color: white; }
+        .sidebar a.active { background: #ff4081; color: white; border-color: #ff4081; }
+        .content { flex: 1; overflow-y: auto; padding: 30px; background: #121212; }
+        .comic-container { background: white; border-radius: 8px; height: 600px; overflow: hidden; }
         iframe { width: 100%; height: 100%; border: none; }
-        .links { margin-top: 20px; display: flex; gap: 20px; justify-content: center; }
-        .links a { color: #ff4081; text-decoration: none; font-weight: bold; border: 1px solid #ff4081; padding: 10px 20px; border-radius: 4px; transition: all 0.3s; }
-        .links a:hover { background-color: #ff4081; color: #fff; }
-        .stats { margin-top: 40px; background: #1f1f1f; padding: 20px; border-radius: 8px; }
-        .stats h2 { color: #ff4081; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .markdown-body { line-height: 1.6; color: #ccc; }
+        .markdown-body h1, .markdown-body h2 { color: #ff4081; border-bottom: 1px solid #333; }
+        .markdown-body pre { background: #1f1f1f; padding: 15px; border-radius: 5px; overflow-x: auto; border: 1px solid #333; }
+        .markdown-body code { font-family: 'Courier New', Courier, monospace; color: #ff79c6; }
     </style>
 </head>
 <body>
     <header>
         <h1>🦃 Crunch's Lair</h1>
-        <p>Hatched in CI, thriving in the logs.</p>
     </header>
-    <div class="container">
-        <div class="comic-frame">
-            <iframe src="viewer.html"></iframe>
+    <div class="main">
+        <div class="sidebar">
+            <a href="#" onclick="showContent('comic')" id="btn-comic" class="active">Latest Comic</a>
+            <a href="#" onclick="showContent('report')" id="btn-report">Health Report</a>
+            <a href="#" onclick="showContent('museum')" id="btn-museum">Hall of Weirdness</a>
+            <a href="#" onclick="showContent('about')" id="btn-about">About Crunch</a>
         </div>
-        <div class="links">
-            <a href="REPORT.md">View Health Report</a>
-            <a href="MUSEUM.md">The Hall of Weirdness</a>
-            <a href="AGENTS.md">About Me</a>
-        </div>
-        <div class="stats">
-            <h2>Repo Status</h2>
-            <p><strong>Mode:</strong> Pre-Valentine's (Crunch)</p>
-            <p><strong>Next Event:</strong> Crush Mode Activation (Feb 14th)</p>
-            <p><strong>Dependencies:</strong> 100% stable (and slightly romantic)</p>
+        <div class="content" id="content-area">
+            <!-- Content will be injected here -->
         </div>
     </div>
+
+    <script>
+        async function fetchMarkdown(path) {
+            const response = await fetch(path);
+            const text = await response.text();
+            return marked.parse(text);
+        }
+
+        async function showContent(type) {
+            const area = document.getElementById('content-area');
+            const buttons = document.querySelectorAll('.sidebar a');
+            buttons.forEach(b => b.classList.remove('active'));
+            document.getElementById('btn-' + type).classList.add('active');
+
+            area.innerHTML = 'Loading...';
+
+            if (type === 'comic') {
+                area.innerHTML = '<div class="comic-container"><iframe src="viewer.html"></iframe></div>';
+            } else if (type === 'report') {
+                const html = await fetchMarkdown('REPORT.md');
+                area.innerHTML = '<div class="markdown-body">' + html + '</div>';
+            } else if (type === 'museum') {
+                const html = await fetchMarkdown('MUSEUM.md');
+                area.innerHTML = '<div class="markdown-body">' + html + '</div>';
+            } else if (type === 'about') {
+                const html = await fetchMarkdown('AGENTS.md');
+                area.innerHTML = '<div class="markdown-body">' + html + '</div>';
+            }
+        }
+
+        // Default view
+        showContent('comic');
+    </script>
 </body>
 </html>
