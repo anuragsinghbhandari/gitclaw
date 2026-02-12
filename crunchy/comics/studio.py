@@ -20,30 +20,28 @@ def create_comic(title, panels):
     run_cmd("add_node", title, 450, -150, 600, 60)
     
     for i, (crunch_says, human_says) in enumerate(panels):
-        x_panel = i * 550
+        x_panel = i * 650  # Increased panel spacing
         y_panel = 0
         
         # Panel Box
-        run_cmd("add_node", "", x_panel, y_panel, 500, 400)
+        run_cmd("add_node", "", x_panel, y_panel, 600, 450)
         
         # Characters
-        crunch_id = run_cmd("add_node", "🦃", x_panel + 60, y_panel + 280, 80, 80)
-        human_id = run_cmd("add_node", "👤", x_panel + 360, y_panel + 280, 80, 80)
+        crunch_id = run_cmd("add_node", "🦃", x_panel + 80, y_panel + 320, 100, 100)
+        human_id = run_cmd("add_node", "👤", x_panel + 420, y_panel + 320, 100, 100)
         
-        # Speech Bubbles
+        # Speech Bubbles (Fixed Width, dynamic height)
         if crunch_says:
-            bubble_id = run_cmd("add_node", crunch_says, x_panel + 40, y_panel + 40, 200, 120)
-            # Arrow from character to bubble
+            bubble_id = run_cmd("add_node", crunch_says, x_panel + 30, y_panel + 30, 250, 100)
             run_cmd("add_arrow", crunch_id, bubble_id)
         
         if human_says:
-            bubble_id = run_cmd("add_node", human_says, x_panel + 260, y_panel + 40, 200, 120)
-            # Arrow from character to bubble
+            bubble_id = run_cmd("add_node", human_says, x_panel + 320, y_panel + 30, 250, 100)
             run_cmd("add_arrow", human_id, bubble_id)
 
     # Export
     run_cmd("export_html", "viewer.html")
-    print("Comic generated with arrows and alignment!")
+    print("Comic generated with wrapped text and better spacing!")
 
 if __name__ == "__main__":
     stories = [

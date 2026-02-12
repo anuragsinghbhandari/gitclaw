@@ -4,6 +4,7 @@ import uuid
 import random
 import sys
 import os
+import textwrap
 
 DIAGRAM_FILE = "diagram.excalidraw"
 
@@ -67,9 +68,6 @@ def create_element(element_type, **kwargs):
             "containerId": kwargs.get("containerId", None),
             "originalText": kwargs.get("text", "")
         })
-        # Approximate width based on character count if not provided
-        if "width" not in kwargs:
-            element["width"] = len(element["text"]) * 10 
     elif element_type == "arrow":
         element.update({
             "points": kwargs.get("points", [[0, 0], [100, 100]]),
@@ -93,21 +91,23 @@ def add_node(label, x, y, width=150, height=80, shape="rectangle"):
     data = load_diagram()
     
     if label:
-        # Dynamic sizing for text boxes
-        char_count = len(label)
-        # Assuming roughly 10px per character for standard font size
-        # and adding some padding
-        min_width = char_count * 9 + 40
-        actual_width = max(width, min_width)
+        # Instead of growing width, we wrap text to fit the width
+        # Approx characters per line for current font size
+        chars_per_line = max(10, int(width / 9))
+        wrapped_text = "\n".join(textwrap.wrap(label, width=chars_per_line))
         
-        node = create_element(shape, x=x, y=y, width=actual_width, height=height)
-        text_element = create_element("text", x=x, y=y, width=actual_width, height=height, text=label, containerId=node["id"])
+        # Calculate height based on number of lines
+        line_count = wrapped_text.count("\n") + 1
+        min_height = line_count * 25 + 20
+        actual_height = max(height, min_height)
+        
+        node = create_element(shape, x=x, y=y, width=width, height=actual_height)
+        text_element = create_element("text", x=x, y=y, width=width, height=actual_height, text=wrapped_text, containerId=node["id"])
         node["boundElements"] = [{"id": text_element["id"], "type": "text"}]
         data["elements"].extend([node, text_element])
         save_diagram(data)
         return node["id"]
     else:
-        # Empty shape (like a panel)
         node = create_element(shape, x=x, y=y, width=width, height=height)
         data["elements"].append(node)
         save_diagram(data)
@@ -143,12 +143,6 @@ def add_arrow(from_id, to_id, label=""):
                            endBinding={"elementId": to_id, "focus": 0, "gap": 1})
     
     data["elements"].append(arrow)
-    if label:
-        mid_x = (actual_start_x + actual_end_x) / 2
-        mid_y = (actual_start_y + actual_end_y) / 2
-        text_label = create_element("text", x=mid_x - 50, y=mid_y - 25, width=100, height=20, text=label)
-        data["elements"].append(text_label)
-
     save_diagram(data)
     return arrow["id"]
 
@@ -212,8 +206,7 @@ if __name__ == "__main__":
     elif cmd == "add_arrow":
         from_id = sys.argv[2]
         to_id = sys.argv[3]
-        label = sys.argv[4] if len(sys.argv) > 4 else ""
-        arrow_id = add_arrow(from_id, to_id, label)
+        arrow_id = add_arrow(from_id, to_id)
         print(f"Added arrow: {arrow_id}")
     elif cmd == "clear":
         clear_diagram()
