@@ -1,54 +1,51 @@
 #!/usr/bin/env python3
 import os
 import sys
+import subprocess
 
 EXCALIDRAW_TOOL = "./.pi/skills/excalidraw/scripts/excalidraw_tool.py"
 
 def run_cmd(cmd, *args):
-    arg_str = " ".join(f'"{a}"' for a in args)
-    os.system(f"{EXCALIDRAW_TOOL} {cmd} {arg_str}")
+    arg_list = [EXCALIDRAW_TOOL, cmd] + [str(a) for a in args]
+    result = subprocess.run(arg_list, capture_output=True, text=True)
+    output = result.stdout.strip()
+    if "Added node:" in output:
+        return output.split("Added node: ")[1].split("\n")[0].strip()
+    return output
 
 def create_comic(title, panels):
     os.system(f"{EXCALIDRAW_TOOL} clear")
     
-    # Title - centered
+    # Title
     run_cmd("add_node", title, 450, -150, 600, 60)
     
     for i, (crunch_says, human_says) in enumerate(panels):
-        x_panel = i * 500
+        x_panel = i * 550
         y_panel = 0
         
-        # 1. Panel Box (Outer)
-        run_cmd("add_node", "", x_panel, y_panel, 450, 350)
+        # Panel Box
+        run_cmd("add_node", "", x_panel, y_panel, 500, 400)
         
-        # 2. Characters (using squares as placeholders for "heads")
-        # Crunch Node
-        crunch_id = f"crunch_{i}" # Not actually used by tool but for mental mapping
-        run_cmd("add_node", "🦃", x_panel + 50, y_panel + 240, 70, 70)
+        # Characters
+        crunch_id = run_cmd("add_node", "🦃", x_panel + 60, y_panel + 280, 80, 80)
+        human_id = run_cmd("add_node", "👤", x_panel + 360, y_panel + 280, 80, 80)
         
-        # Human Node
-        run_cmd("add_node", "👤", x_panel + 330, y_panel + 240, 70, 70)
-        
-        # 3. Speech Bubbles / Labels
+        # Speech Bubbles
         if crunch_says:
-            # Bubble box
-            run_cmd("add_node", crunch_says, x_panel + 30, y_panel + 30, 180, 100)
-            # Arrow from crunch to bubble
-            # Note: add_node returns id to stdout, but our run_cmd doesn't capture it easily.
-            # I'll modify the tool usage or just use boxes for now to avoid ID-tracking complexity
-            # since I want to fix the visual layout first.
+            bubble_id = run_cmd("add_node", crunch_says, x_panel + 40, y_panel + 40, 200, 120)
+            # Arrow from character to bubble
+            run_cmd("add_arrow", crunch_id, bubble_id)
         
         if human_says:
-            # Bubble box
-            run_cmd("add_node", human_says, x_panel + 240, y_panel + 30, 180, 100)
+            bubble_id = run_cmd("add_node", human_says, x_panel + 260, y_panel + 40, 200, 120)
+            # Arrow from character to bubble
+            run_cmd("add_arrow", human_id, bubble_id)
 
     # Export
     run_cmd("export_html", "viewer.html")
-    # Also update index.html if it exists to point here
-    print("Comic generated with better boxes!")
+    print("Comic generated with arrows and alignment!")
 
 if __name__ == "__main__":
-    import random
     stories = [
         {
             "title": "The Valentine's Dilemma",
@@ -59,5 +56,5 @@ if __name__ == "__main__":
             ]
         }
     ]
-    story = random.choice(stories)
+    story = stories[0]
     create_comic(story["title"], story["panels"])
