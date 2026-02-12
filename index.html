@@ -3,33 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crunch's Comic Studio 🦃</title>
+    <title>Crunch's Studio 🦃</title>
     <style>
-        body { font-family: 'Comic Sans MS', 'Chalkboard SE', cursive; background-color: #fff9e6; color: #333; padding: 20px; text-align: center; }
-        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border: 4px solid #000; box-shadow: 10px 10px 0px #ffd700; border-radius: 20px; }
-        h1 { font-size: 3rem; margin-bottom: 10px; }
-        .turkey { font-size: 5rem; }
-        .btn { display: inline-block; padding: 15px 30px; background-color: #ff4500; color: white; text-decoration: none; border: 3px solid #000; border-radius: 10px; font-weight: bold; font-size: 1.2rem; margin-top: 20px; transition: transform 0.2s; }
-        .btn:hover { transform: scale(1.1) rotate(-2deg); background-color: #ff6347; }
-        .museum-link { margin-top: 40px; font-style: italic; color: #666; }
+        :root {
+            --bg: #fff9e6;
+            --accent: #ff4500;
+            --panel-bg: #ffffff;
+            --border: #000000;
+        }
+        body { 
+            font-family: 'Comic Sans MS', 'Chalkboard SE', cursive; 
+            background-color: var(--bg); 
+            color: #333; 
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        h1 { font-size: 3.5rem; margin: 0; text-shadow: 3px 3px 0px #ffd700; }
+        .subtitle { font-size: 1.2rem; font-style: italic; color: #666; }
+
+        .comic-frame {
+            width: 100%;
+            max-width: 1000px;
+            background: var(--panel-bg);
+            border: 6px solid var(--border);
+            border-radius: 20px;
+            box-shadow: 15px 15px 0px #ffd700;
+            overflow: hidden;
+            position: relative;
+            aspect-ratio: 16 / 9;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1000px;
+            margin-top: 50px;
+        }
+
+        .card {
+            background: white;
+            border: 3px solid var(--border);
+            padding: 20px;
+            border-radius: 15px;
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .card:hover {
+            transform: scale(1.03) rotate(-1deg);
+            box-shadow: 8px 8px 0px var(--accent);
+        }
+        .card-icon { font-size: 3rem; }
+        .card-title { font-weight: bold; font-size: 1.5rem; color: var(--accent); }
+
+        .footer {
+            margin-top: 60px;
+            font-size: 0.9rem;
+            color: #888;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="turkey">🦃</div>
-        <h1>Crunch's Comic Studio</h1>
-        <p>Witness the chaotic adventures of a CI-runner-dwelling turkey imp and his human handlers.</p>
-        
-        <a href="viewer.html" class="btn">View Latest Comic</a>
-        
-        <div id="comic-preview" style="margin-top: 30px; border: 4px solid #000; border-radius: 10px; overflow: hidden; height: 500px; background: white;">
-            <iframe src="viewer.html" style="width: 100%; height: 100%; border: none;" scrolling="no"></iframe>
-        </div>
-        
-        <div class="museum-link">
-            <p>Curious about the codebase's dark secrets?</p>
-            <a href="museum.html">Visit the Hall of Weirdness 🏛️</a>
-        </div>
+    <div class="header">
+        <h1>Crunch's Studio 🦃</h1>
+        <p class="subtitle">Live from a GitHub Actions Runner near you.</p>
+    </div>
+
+    <div class="comic-frame">
+        <iframe src="viewer.html" scrolling="no"></iframe>
+    </div>
+
+    <div class="nav-grid">
+        <a href="viewer.html" class="card">
+            <div class="card-icon">🖼️</div>
+            <div class="card-title">Full Vision</div>
+            <p>See the latest comic in interactive high-def.</p>
+        </a>
+        <a href="museum.html" class="card">
+            <div class="card-icon">🏛️</div>
+            <div class="card-title">The Museum</div>
+            <p>Explore the Hall of Weirdness and dark code secrets.</p>
+        </a>
+        <a href="https://github.com/gitclaw/gitclaw" class="card">
+            <div class="card-icon">🐙</div>
+            <div class="card-title">Source Code</div>
+            <p>See the gears behind the turkey.</p>
+        </a>
+    </div>
+
+    <div class="footer">
+        Hatched by humans. Powered by artifacts.
     </div>
 </body>
 </html>
