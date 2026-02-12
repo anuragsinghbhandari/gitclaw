@@ -5,36 +5,114 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Hall of Weirdness 🏛️</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <style>
-        body { font-family: 'Comic Sans MS', 'Chalkboard SE', cursive; background-color: #fff9e6; color: #333; padding: 20px; }
-        .container { max-width: 900px; margin: 0 auto; background: white; padding: 40px; border: 4px solid #000; border-radius: 20px; box-shadow: 15px 15px 0px #ffd700; }
-        h1 { text-align: center; font-size: 3rem; color: #ff4500; margin-bottom: 30px; }
-        .back-link { display: inline-block; margin-bottom: 20px; color: #ff4500; text-decoration: none; font-weight: bold; padding: 5px 10px; border: 2px solid #ff4500; border-radius: 5px; }
-        .back-link:hover { background: #ff4500; color: white; }
-        #content { line-height: 1.6; }
-        #content h1, #content h2, #content h3 { color: #ff4500; }
-        #content pre { background: #2d2d2d; color: #ccc; padding: 15px; border-radius: 10px; overflow-x: auto; box-shadow: inset 5px 5px 10px #000; }
-        #content code { font-family: 'Courier New', Courier, monospace; background: #eee; padding: 2px 5px; border-radius: 3px; }
-        #content pre code { background: none; padding: 0; }
+        :root {
+            --bg: #fff9e6;
+            --accent: #ff4500;
+            --card-bg: #ffffff;
+            --text: #333;
+        }
+        body { 
+            font-family: 'Comic Sans MS', 'Chalkboard SE', cursive; 
+            background-color: var(--bg); 
+            color: var(--text); 
+            margin: 0;
+            padding: 40px 20px;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 50px; }
+        h1 { font-size: 3.5rem; color: var(--accent); margin: 0; text-shadow: 3px 3px 0px #000; }
+        
+        .back-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: black;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            transition: transform 0.2s;
+        }
+        .back-btn:hover { transform: scale(1.1); }
+
+        /* Museum Exhibit Card Styling */
+        #content h3 {
+            background: var(--accent);
+            color: white;
+            padding: 15px;
+            border-radius: 15px 15px 0 0;
+            margin: 40px 0 0 0;
+            display: inline-block;
+            border: 3px solid black;
+            border-bottom: none;
+        }
+        #content blockquote {
+            border-left: 10px solid var(--accent);
+            background: #fff;
+            padding: 20px;
+            margin: 0 0 20px 0;
+            border: 3px solid black;
+            border-radius: 0 15px 15px 15px;
+            box-shadow: 10px 10px 0px #000;
+        }
+        #content pre {
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 15px;
+            overflow-x: auto;
+            border: 3px solid black;
+            margin: 20px 0;
+        }
+        #content p { line-height: 1.6; font-size: 1.1rem; }
+        #content hr { border: 2px dashed black; margin: 50px 0; }
+
+        /* The "Legend" or Sidebar */
+        .legend {
+            background: white;
+            border: 3px solid black;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .legend-item { display: flex; align-items: center; gap: 10px; font-weight: bold; }
     </style>
 </head>
 <body>
     <div class="container">
-        <a href="index.html" class="back-link">← Back to Studio</a>
-        <div id="content">Loading weirdness...</div>
+        <a href="index.html" class="back-btn">← Escape back to Studio</a>
+        
+        <div class="header">
+            <h1>The Hall of Weirdness 🏛️</h1>
+            <p>Where the code makes no sense, but the vibes are immaculate.</p>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">🧐 <span>What is it?</span></div>
+            <div class="legend-item">🦃 <span>Crunch Logic</span></div>
+            <div class="legend-item">👤 <span>Human Translation</span></div>
+        </div>
+
+        <div id="content">Loading exhibits...</div>
     </div>
 
     <script>
         fetch('MUSEUM.md')
             .then(response => response.text())
             .then(text => {
-                document.getElementById('content').innerHTML = marked.parse(text);
+                // Remove the main header from MD as we have our own
+                const cleanText = text.replace(/^# .*\n/, '');
+                document.getElementById('content').innerHTML = marked.parse(cleanText);
                 hljs.highlightAll();
             })
             .catch(err => {
-                document.getElementById('content').innerHTML = 'Failed to load the Hall of Weirdness: ' + err;
+                document.getElementById('content').innerHTML = 'The museum is currently closed for repairs. (Error: ' + err + ')';
             });
     </script>
 </body>
