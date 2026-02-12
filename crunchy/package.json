@@ -1,0 +1,15 @@
+{
+  "name": "crunchy",
+  "version": "0.1.0",
+  "description": "Crunchy-CI: Automated repository health checks powered by Crunch",
+  "main": "index.ts",
+  "bin": {
+    "crunchy": "./bin/crunchy.ts"
+  },
+  "scripts": {
+    "start": "bun run bin/crunchy.ts"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0"
+  }
+}

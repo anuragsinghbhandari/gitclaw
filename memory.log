@@ -1,3 +1,4 @@
 [2026-02-11 18:31] Added Excalidraw skill to build architecture diagrams. Tool located at .pi/skills/excalidraw/scripts/excalidraw_tool.py.
 [2026-02-11 18:36] Added viewer.html asset for Excalidraw skill to enable browser viewing of diagrams.
 [2026-02-12 03:55] Created and packaged 4 new skills: code-critic, refactor-bot, test-gen, and doc-gen.
+[2026-02-12 12:17] Hatched the Crunchy-CI sub-project in /crunchy and integrated skills into a health check report.

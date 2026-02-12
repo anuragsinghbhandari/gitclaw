@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "crunchy": "bun run crunchy/bin/crunchy.ts"
+  },
   "dependencies": {
     "@mariozechner/pi-coding-agent": "^0.52.5"
   }
