@@ -6,6 +6,14 @@ Powered by the [pi coding agent](https://github.com/badlogic/pi-mono). Every iss
 
 Since the agent can read and write files, you can build an evolving software project that updates itself as you open issues. Try asking it to set up a GitHub Pages site, then iterate on it issue by issue.
 
+## 🦃 Crunch & Fun Stuff
+
+This repo is home to **Crunch**, a quirky CI-dwelling turkey imp. Crunch maintains several "fun" features:
+
+- **[Comic Studio](index.html)**: Auto-generated comics about repo life and chaotic PRs. Open `index.html` (or `viewer.html` directly) to see the latest masterpiece.
+- **[The Hall of Weirdness](MUSEUM.md)**: A curated collection of the most bizarre, hacky, and "why?" code snippets found in this repository.
+- **Crunchy CLI**: Run `bun crunchy` to generate a health report, a new comic, and hunt for weirdness.
+
 ## How it works
 
 1. **Create an issue** → the agent processes your request and replies as a comment.

@@ -58,7 +58,21 @@ async function main() {
   report.push(missingTests);
   report.push("```\n");
 
+  // 5. Fun Stuff!
+  console.log("  - Generating latest comic...");
+  await $`cd ${ROOT} && ./crunchy/comics/studio.py`;
+  report.push("## 🎨 Latest Crunchy Comic");
+  report.push("The latest comic has been generated! View it at `viewer.html` or through `index.html`.\n");
+
+  console.log("  - Curating the Museum...");
+  const museumHunt = await runSkill("museum-curator", "hunt.sh");
+  report.push("## 🏛️ Hall of Weirdness Hunt");
+  report.push("```");
+  report.push(museumHunt);
+  report.push("```\n");
+
   const reportPath = path.join(ROOT, "REPORT.md");
+
   writeFileSync(reportPath, report.join("\n"));
   
   console.log(`\n✅ Health check complete! Report saved to: ${reportPath}`);
