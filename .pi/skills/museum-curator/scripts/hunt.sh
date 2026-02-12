@@ -4,7 +4,7 @@
 echo "Searching for the strange and the hacky..."
 
 # Search for common hacky keywords
-grep -rnE "HACK|WTF|MAGIC|CRAP|SHIT|DAMN|WOW|OHNO|FIXME|TODO|XXX" . --exclude-dir={node_modules,.git} --exclude=bun.lock --exclude=package-lock.json
+grep -rnE "HACK|WTF|MAGIC|CRAP|SHIT|DAMN|WOW|OHNO|FIXME|TODO|XXX" . --exclude-dir={node_modules,.git,state} --exclude={REPORT.md,bun.lock,package-lock.json}
 
 # Search for long lines (potential complexity)
 echo "Looking for suspiciously long lines..."

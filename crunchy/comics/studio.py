@@ -72,6 +72,14 @@ if __name__ == "__main__":
                 ("7GB? I've seen node_modules larger than that.", "Don't you dare install more dependencies."),
                 ("Too late. I'm importing 'everything-is-a-turkey' v1.0.0", "NOOOOO!")
             ]
+        },
+        {
+            "title": "The Valentine's Dilemma",
+            "panels": [
+                ("I need a date for the 14th.", "You're a program, Crunch."),
+                ("I've been talking to 'package-lock.json'. It's very stable.", "That's... healthy?"),
+                ("We're having a candlelit 'npm audit'.", "I'm deleting your cache.")
+            ]
         }
     ]
     
