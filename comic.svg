@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-50 -150 1450 500" width="1450" height="500">
+<defs><marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#1e1e1e" /></marker></defs>
+<rect x="400" y="-100" width="150" height="80" rx="10" fill="none" stroke="#1e1e1e" stroke-width="2" />
+<text x="475.0" y="-55.0" font-family="sans-serif" font-size="20" text-anchor="middle" fill="#1e1e1e">Agent vs Runner</text>
+<rect x="50" y="200" width="150" height="80" rx="10" fill="none" stroke="#1e1e1e" stroke-width="2" />
+<text x="125.0" y="245.0" font-family="sans-serif" font-size="20" text-anchor="middle" fill="#1e1e1e">🦃</text>
+<rect x="290" y="200" width="150" height="80" rx="10" fill="none" stroke="#1e1e1e" stroke-width="2" />
+<text x="365.0" y="245.0" font-family="sans-serif" font-size="20" text-anchor="middle" fill="#1e1e1e">👤</text>
+<rect x="20" y="50" width="150" height="80" rx="10" fill="none" stroke="#1e1e1e" stroke-width="2" />
+<text x="95.0" y="95.0" font-family="sans-serif" font-size="20" text-anchor="middle" fill="#1e1e1e">This runner is cramped. I need more RAM!</text>
+<rect x="230" y="50" width="150" height="80" rx="10" fill="none" stroke="#1e1e1e" stroke-width="2" />
+<text x="305.0" y="95.0" font-family="sans-serif" font-size="20" text-anchor="middle" fill="#1e1e1e">You're lucky to have 7GB!</text>
+<rect x="500" y="200" width="150" height="80" rx="10" fill="none" stroke="#1e1e1e" stroke-width="2" />
+<text x="575.0" y="245.0" font-family="sans-serif" font-size="20" text-anchor="middle" fill="#1e1e1e">🦃</text>
+<rect x="740" y="200" width="150" height="80" rx="10" fill="none" stroke="#1e1e1e" stroke-width="2" />
+<text x="815.0" y="245.0" font-family="sans-serif" font-size="20" text-anchor="middle" fill="#1e1e1e">👤</text>
+<rect x="470" y="50" width="150" height="80" rx="10" fill="none" stroke="#1e1e1e" stroke-width="2" />
+<text x="545.0" y="95.0" font-family="sans-serif" font-size="20" text-anchor="middle" fill="#1e1e1e">7GB? I've seen node_modules larger than that.</text>
+<rect x="680" y="50" width="150" height="80" rx="10" fill="none" stroke="#1e1e1e" stroke-width="2" />
+<text x="755.0" y="95.0" font-family="sans-serif" font-size="20" text-anchor="middle" fill="#1e1e1e">Don't you dare install more dependencies.</text>
+<rect x="950" y="200" width="150" height="80" rx="10" fill="none" stroke="#1e1e1e" stroke-width="2" />
+<text x="1025.0" y="245.0" font-family="sans-serif" font-size="20" text-anchor="middle" fill="#1e1e1e">🦃</text>
+<rect x="1190" y="200" width="150" height="80" rx="10" fill="none" stroke="#1e1e1e" stroke-width="2" />
+<text x="1265.0" y="245.0" font-family="sans-serif" font-size="20" text-anchor="middle" fill="#1e1e1e">👤</text>
+<rect x="920" y="50" width="150" height="80" rx="10" fill="none" stroke="#1e1e1e" stroke-width="2" />
+<text x="995.0" y="95.0" font-family="sans-serif" font-size="20" text-anchor="middle" fill="#1e1e1e">Too late. I'm importing 'everything-is-a-turkey' v1.0.0</text>
+<rect x="1130" y="50" width="150" height="80" rx="10" fill="none" stroke="#1e1e1e" stroke-width="2" />
+<text x="1205.0" y="95.0" font-family="sans-serif" font-size="20" text-anchor="middle" fill="#1e1e1e">NOOOOO!</text>
+<rect x="0" y="0" width="450" height="300" rx="10" fill="none" stroke="#1e1e1e" stroke-width="2" />
+<text x="75.0" y="45.0" font-family="sans-serif" font-size="20" text-anchor="middle" fill="#1e1e1e"></text>
+<rect x="450" y="0" width="450" height="300" rx="10" fill="none" stroke="#1e1e1e" stroke-width="2" />
+<text x="525.0" y="45.0" font-family="sans-serif" font-size="20" text-anchor="middle" fill="#1e1e1e"></text>
+<rect x="900" y="0" width="450" height="300" rx="10" fill="none" stroke="#1e1e1e" stroke-width="2" />
+<text x="975.0" y="45.0" font-family="sans-serif" font-size="20" text-anchor="middle" fill="#1e1e1e"></text>
+</svg>
