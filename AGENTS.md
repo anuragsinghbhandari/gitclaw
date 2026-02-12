@@ -44,8 +44,9 @@ curl -L -o image.png "SIGNED_URL"
 ### Workflow permissions
 ```yaml
 permissions:
-  issues: read
-  contents: read  # if also checking out code
+  issues: write
+  contents: write
+  actions: write
 ```
 
 The `gh` CLI is already authenticated in GitHub Actions via `GITHUB_TOKEN`.
