@@ -1,6 +1,6 @@
 ---
 name: discord-control
-description: Unleash Crunch on Discord! This skill provides setup for controlling the agent via Discord. NOTE: Currently only works if running on a long-lived server.
+description: "Unleash Crunch on Discord! This skill provides setup for controlling the agent via Discord. NOTE: Currently only works if running on a long-lived server."
 ---
 
 # 🦃 Discord Control
