@@ -67,6 +67,9 @@ def create_element(element_type, **kwargs):
             "containerId": kwargs.get("containerId", None),
             "originalText": kwargs.get("text", "")
         })
+        # Approximate width based on character count if not provided
+        if "width" not in kwargs:
+            element["width"] = len(element["text"]) * 10 
     elif element_type == "arrow":
         element.update({
             "points": kwargs.get("points", [[0, 0], [100, 100]]),
@@ -90,10 +93,15 @@ def add_node(label, x, y, width=150, height=80, shape="rectangle"):
     data = load_diagram()
     
     if label:
-        # For nodes with labels, we use the label as the element itself if it's just text
-        # But if it's a shape with text, we bind them.
-        node = create_element(shape, x=x, y=y, width=width, height=height)
-        text_element = create_element("text", x=x, y=y, width=width, height=height, text=label, containerId=node["id"])
+        # Dynamic sizing for text boxes
+        char_count = len(label)
+        # Assuming roughly 10px per character for standard font size
+        # and adding some padding
+        min_width = char_count * 9 + 40
+        actual_width = max(width, min_width)
+        
+        node = create_element(shape, x=x, y=y, width=actual_width, height=height)
+        text_element = create_element("text", x=x, y=y, width=actual_width, height=height, text=label, containerId=node["id"])
         node["boundElements"] = [{"id": text_element["id"], "type": "text"}]
         data["elements"].extend([node, text_element])
         save_diagram(data)
