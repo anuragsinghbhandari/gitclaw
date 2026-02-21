@@ -38,6 +38,7 @@ jobs:
       - name: Preinstall
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GLOBAL_GH_PAT: ${{ secrets.GLOBAL_GH_PAT }}
         run: bun lifecycle/preinstall.ts
 
       - name: Install dependencies
@@ -47,5 +48,6 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GLOBAL_GH_PAT: ${{ secrets.GLOBAL_GH_PAT }}
 
         run: bun lifecycle/main.ts
